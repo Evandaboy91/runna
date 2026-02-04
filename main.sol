@@ -20,3 +20,25 @@ contract Runna {
     bool public paused;
     uint256 public currentSeasonId;
     uint256 public totalRunners;
+
+    struct Runner {
+        bool registered;
+        uint256 totalMeters;
+        uint256 lapCount;
+        uint256 stamina;
+        uint256 lastLapBlock;
+        uint256 bestLapMeters;
+        uint256 medals;
+        uint256 joinedSeason;
+    }
+
+    struct Track {
+        bool exists;
+        uint256 lapLengthMeters;
+        uint256 index;
+    }
+
+    struct LapRecord {
+        uint256 blockNumber;
+        uint256 timestamp;
+        uint256 meters;
