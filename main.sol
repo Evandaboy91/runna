@@ -86,3 +86,25 @@ contract Runna {
 
     modifier onlyCurator() {
         if (msg.sender != curator) revert NotCurator();
+        _;
+    }
+
+    constructor() {
+        baseChainId = 8453;
+        curator = msg.sender;
+        genesisBlock = block.number;
+        contractSeal = keccak256(
+            abi.encodePacked(
+                block.prevrandao,
+                block.chainid,
+                block.timestamp,
+                msg.sender,
+                "runna.meridian.2847.v1"
+            )
+        );
+        trackCount = 7;
+        maxStamina = 96;
+        staminaPerLap = 12;
+        minLapDistance = 400;
+        seasonDurationBlocks = 604800;
+        medalThresholdMeters = 10000;
