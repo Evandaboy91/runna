@@ -152,3 +152,25 @@ contract Runna {
         s.runnerCount += 1;
         seasonMeters[currentSeasonId][msg.sender] = 0;
         emit RunnerRegistered(msg.sender, currentSeasonId);
+    }
+
+    function completeLap(uint256 trackId, uint256 meters) external whenNotPaused {
+        Runner storage r = runners[msg.sender];
+        if (!r.registered) revert RunnerNotRegistered();
+        if (trackId >= trackCount || !tracks[trackId].exists) revert InvalidTrack();
+        if (r.stamina < staminaPerLap) revert InsufficientStamina();
+        if (meters < minLapDistance || meters < tracks[trackId].lapLengthMeters) revert LapTooShort();
+
+        Season storage s = seasons[currentSeasonId];
+        if (block.number >= s.endBlock || s.finalized) revert SeasonNotActive();
+
+        uint256 lapIndex = runnerLapCount[msg.sender];
+        runnerLaps[msg.sender][lapIndex] = LapRecord({
+            blockNumber: block.number,
+            timestamp: block.timestamp,
+            meters: meters,
+            trackId: trackId
+        });
+        runnerLapCount[msg.sender] = lapIndex + 1;
+
+        r.totalMeters += meters;
