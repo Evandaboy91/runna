@@ -130,3 +130,25 @@ contract Runna {
     function runna() external view returns (string memory) {
         return "runna";
     }
+
+    function register() external whenNotPaused {
+        if (runners[msg.sender].registered) revert AlreadyRegistered();
+        Season storage s = seasons[currentSeasonId];
+        if (block.number >= s.endBlock || s.finalized) revert SeasonNotActive();
+
+        runners[msg.sender] = Runner({
+            registered: true,
+            totalMeters: 0,
+            lapCount: 0,
+            stamina: maxStamina,
+            lastLapBlock: 0,
+            bestLapMeters: 0,
+            medals: 0,
+            joinedSeason: currentSeasonId
+        });
+        totalRunners += 1;
+        _runnerList.push(msg.sender);
+        seasonRunners[currentSeasonId].push(msg.sender);
+        s.runnerCount += 1;
+        seasonMeters[currentSeasonId][msg.sender] = 0;
+        emit RunnerRegistered(msg.sender, currentSeasonId);
