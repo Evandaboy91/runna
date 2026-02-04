@@ -174,3 +174,25 @@ contract Runna {
         runnerLapCount[msg.sender] = lapIndex + 1;
 
         r.totalMeters += meters;
+        r.lapCount += 1;
+        r.lastLapBlock = block.number;
+        r.stamina -= staminaPerLap;
+        if (meters > r.bestLapMeters) r.bestLapMeters = meters;
+        seasonMeters[currentSeasonId][msg.sender] += meters;
+
+        if (r.totalMeters >= medalThresholdMeters && (r.totalMeters - meters) < medalThresholdMeters) {
+            r.medals += 1;
+            emit MedalAwarded(msg.sender, r.medals);
+        }
+
+        emit LapCompleted(msg.sender, trackId, meters, block.number);
+    }
+
+    function restoreStamina() external whenNotPaused {
+        Runner storage r = runners[msg.sender];
+        if (!r.registered) revert RunnerNotRegistered();
+        uint256 blocksSinceLastLap = block.number - r.lastLapBlock;
+        uint256 blocksPerStamina = 120;
+        if (blocksSinceLastLap >= blocksPerStamina && r.stamina < maxStamina) {
+            uint256 gain = blocksSinceLastLap / blocksPerStamina;
+            if (r.stamina + gain > maxStamina) gain = maxStamina - r.stamina;
