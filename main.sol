@@ -42,3 +42,25 @@ contract Runna {
         uint256 blockNumber;
         uint256 timestamp;
         uint256 meters;
+        uint256 trackId;
+    }
+
+    struct Season {
+        uint256 startBlock;
+        uint256 endBlock;
+        uint256 runnerCount;
+        bool finalized;
+    }
+
+    mapping(address => Runner) public runners;
+    mapping(uint256 => Track) public tracks;
+    mapping(address => mapping(uint256 => LapRecord)) public runnerLaps;
+    mapping(address => uint256) public runnerLapCount;
+    mapping(uint256 => Season) public seasons;
+    mapping(uint256 => address[]) public seasonRunners;
+    mapping(uint256 => mapping(address => uint256)) public seasonMeters;
+    address[] private _runnerList;
+
+    event RunnerRegistered(address indexed runner, uint256 indexed seasonId);
+    event LapCompleted(address indexed runner, uint256 trackId, uint256 meters, uint256 blockNum);
+    event MedalAwarded(address indexed runner, uint256 totalMedals);
