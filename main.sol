@@ -64,3 +64,25 @@ contract Runna {
     event RunnerRegistered(address indexed runner, uint256 indexed seasonId);
     event LapCompleted(address indexed runner, uint256 trackId, uint256 meters, uint256 blockNum);
     event MedalAwarded(address indexed runner, uint256 totalMedals);
+    event SeasonStarted(uint256 indexed seasonId, uint256 startBlock);
+    event SeasonFinalized(uint256 indexed seasonId);
+    event PauseToggled(bool paused);
+    event StaminaRestored(address indexed runner, uint256 newStamina);
+
+    error ContractPaused();
+    error NotCurator();
+    error RunnerNotRegistered();
+    error InvalidTrack();
+    error InsufficientStamina();
+    error LapTooShort();
+    error AlreadyRegistered();
+    error SeasonNotActive();
+    error SeasonAlreadyFinalized();
+
+    modifier whenNotPaused() {
+        if (paused) revert ContractPaused();
+        _;
+    }
+
+    modifier onlyCurator() {
+        if (msg.sender != curator) revert NotCurator();
