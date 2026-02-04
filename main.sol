@@ -196,3 +196,25 @@ contract Runna {
         if (blocksSinceLastLap >= blocksPerStamina && r.stamina < maxStamina) {
             uint256 gain = blocksSinceLastLap / blocksPerStamina;
             if (r.stamina + gain > maxStamina) gain = maxStamina - r.stamina;
+            r.stamina += gain;
+            emit StaminaRestored(msg.sender, r.stamina);
+        }
+    }
+
+    function startNewSeason() external onlyCurator {
+        Season storage prev = seasons[currentSeasonId];
+        if (!prev.finalized && block.number < prev.endBlock) revert SeasonNotActive();
+        currentSeasonId += 1;
+        seasons[currentSeasonId] = Season({
+            startBlock: block.number,
+            endBlock: block.number + seasonDurationBlocks,
+            runnerCount: 0,
+            finalized: false
+        });
+        emit SeasonStarted(currentSeasonId, block.number);
+    }
+
+    function finalizeSeason(uint256 seasonId) external onlyCurator {
+        Season storage s = seasons[seasonId];
+        if (s.finalized) revert SeasonAlreadyFinalized();
+        if (block.number < s.endBlock) revert SeasonNotActive();
