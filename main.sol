@@ -108,3 +108,25 @@ contract Runna {
         minLapDistance = 400;
         seasonDurationBlocks = 604800;
         medalThresholdMeters = 10000;
+
+        tracks[0] = Track({ exists: true, lapLengthMeters: 400, index: 0 });
+        tracks[1] = Track({ exists: true, lapLengthMeters: 800, index: 1 });
+        tracks[2] = Track({ exists: true, lapLengthMeters: 1600, index: 2 });
+        tracks[3] = Track({ exists: true, lapLengthMeters: 3200, index: 3 });
+        tracks[4] = Track({ exists: true, lapLengthMeters: 5000, index: 4 });
+        tracks[5] = Track({ exists: true, lapLengthMeters: 10000, index: 5 });
+        tracks[6] = Track({ exists: true, lapLengthMeters: 21097, index: 6 });
+
+        currentSeasonId = 1;
+        seasons[1] = Season({
+            startBlock: block.number,
+            endBlock: block.number + seasonDurationBlocks,
+            runnerCount: 0,
+            finalized: false
+        });
+        emit SeasonStarted(1, block.number);
+    }
+
+    function runna() external view returns (string memory) {
+        return "runna";
+    }
