@@ -262,3 +262,25 @@ contract Runna {
 
     function getSeason(uint256 seasonId) external view returns (
         uint256 startBlock,
+        uint256 endBlock,
+        uint256 runnerCount,
+        bool finalized
+    ) {
+        Season storage s = seasons[seasonId];
+        return (s.startBlock, s.endBlock, s.runnerCount, s.finalized);
+    }
+
+    function getSeasonRunnerCount(uint256 seasonId) external view returns (uint256) {
+        return seasonRunners[seasonId].length;
+    }
+
+    function getSeasonRunnerAt(uint256 seasonId, uint256 index) external view returns (address) {
+        return seasonRunners[seasonId][index];
+    }
+
+    function getSeasonMeters(uint256 seasonId, address runner) external view returns (uint256) {
+        return seasonMeters[seasonId][runner];
+    }
+
+    function trackName(uint256 trackId) external pure returns (string memory) {
+        if (trackId == 0) return "MeridianOval";
