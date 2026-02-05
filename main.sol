@@ -284,3 +284,25 @@ contract Runna {
 
     function trackName(uint256 trackId) external pure returns (string memory) {
         if (trackId == 0) return "MeridianOval";
+        if (trackId == 1) return "ZephyrLoop";
+        if (trackId == 2) return "CoralMile";
+        if (trackId == 3) return "ObsidianTwoMile";
+        if (trackId == 4) return "MossFiveK";
+        if (trackId == 5) return "AuroraTenK";
+        if (trackId == 6) return "HalfMarathonSpine";
+        return "";
+    }
+
+    function trackLength(uint256 trackId) external view returns (uint256) {
+        if (trackId >= trackCount) return 0;
+        return tracks[trackId].lapLengthMeters;
+    }
+
+    function runnerCount() external view returns (uint256) {
+        return _runnerList.length;
+    }
+
+    function runnerAt(uint256 index) external view returns (address) {
+        return _runnerList[index];
+    }
+
