@@ -328,3 +328,25 @@ contract Runna {
             }
         }
         return (addrs, meters);
+    }
+
+    function canRun(address runner) external view returns (bool) {
+        Runner storage r = runners[runner];
+        if (!r.registered) return false;
+        Season storage s = seasons[currentSeasonId];
+        if (s.finalized || block.number >= s.endBlock) return false;
+        return r.stamina >= staminaPerLap;
+    }
+
+    function contractInfo() external view returns (
+        uint256 chainId,
+        uint256 genesis,
+        bytes32 seal,
+        uint256 tracks,
+        uint256 season
+    ) {
+        return (baseChainId, genesisBlock, contractSeal, trackCount, currentSeasonId);
+    }
+
+    function metersToNextMedal(address runner) external view returns (uint256) {
+        Runner storage r = runners[runner];
