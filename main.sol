@@ -218,3 +218,25 @@ contract Runna {
         Season storage s = seasons[seasonId];
         if (s.finalized) revert SeasonAlreadyFinalized();
         if (block.number < s.endBlock) revert SeasonNotActive();
+        s.finalized = true;
+        emit SeasonFinalized(seasonId);
+    }
+
+    function setPaused(bool _paused) external onlyCurator {
+        paused = _paused;
+        emit PauseToggled(_paused);
+    }
+
+    function getRunner(address runner) external view returns (
+        bool registered,
+        uint256 totalMeters,
+        uint256 lapCount,
+        uint256 stamina,
+        uint256 lastLapBlock,
+        uint256 bestLapMeters,
+        uint256 medals,
+        uint256 joinedSeason
+    ) {
+        Runner storage r = runners[runner];
+        return (
+            r.registered,
