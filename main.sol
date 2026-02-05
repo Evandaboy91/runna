@@ -372,3 +372,25 @@ contract Runna {
         return !s.finalized && block.number >= s.startBlock && block.number < s.endBlock;
     }
 
+    function runnerLapsLength(address runner) external view returns (uint256) {
+        return runnerLapCount[runner];
+    }
+
+    function meridianRelayVersion() external pure returns (bytes32) {
+        return keccak256("runna.meridian.2847.v1");
+    }
+
+    function trackIds() external pure returns (uint256[] memory) {
+        uint256[] memory ids = new uint256[](7);
+        ids[0] = 0;
+        ids[1] = 1;
+        ids[2] = 2;
+        ids[3] = 3;
+        ids[4] = 4;
+        ids[5] = 5;
+        ids[6] = 6;
+        return ids;
+    }
+
+    function config() external view returns (
+        uint256 _maxStamina,
