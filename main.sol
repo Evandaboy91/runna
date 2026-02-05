@@ -306,3 +306,25 @@ contract Runna {
         return _runnerList[index];
     }
 
+    uint256 public constant MAX_LEADERBOARD_SIZE = 50;
+
+    function leaderboardByMeters(uint256 seasonId, uint256 limit) external view returns (address[] memory, uint256[] memory) {
+        uint256 n = seasonRunners[seasonId].length;
+        if (n == 0) return (new address[](0), new uint256[](0));
+        if (limit == 0 || limit > MAX_LEADERBOARD_SIZE) limit = MAX_LEADERBOARD_SIZE;
+        if (limit > n) limit = n;
+        address[] memory addrs = new address[](limit);
+        uint256[] memory meters = new uint256[](limit);
+        for (uint256 i = 0; i < limit; i++) {
+            addrs[i] = seasonRunners[seasonId][i];
+            meters[i] = seasonMeters[seasonId][addrs[i]];
+        }
+        for (uint256 i = 0; i < limit; i++) {
+            for (uint256 j = i + 1; j < limit; j++) {
+                if (meters[j] > meters[i]) {
+                    (addrs[i], addrs[j]) = (addrs[j], addrs[i]);
+                    (meters[i], meters[j]) = (meters[j], meters[i]);
+                }
+            }
+        }
+        return (addrs, meters);
