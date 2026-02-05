@@ -240,3 +240,25 @@ contract Runna {
         Runner storage r = runners[runner];
         return (
             r.registered,
+            r.totalMeters,
+            r.lapCount,
+            r.stamina,
+            r.lastLapBlock,
+            r.bestLapMeters,
+            r.medals,
+            r.joinedSeason
+        );
+    }
+
+    function getRunnerLap(address runner, uint256 lapIndex) external view returns (
+        uint256 blockNumber,
+        uint256 timestamp,
+        uint256 meters,
+        uint256 trackId
+    ) {
+        LapRecord storage lr = runnerLaps[runner][lapIndex];
+        return (lr.blockNumber, lr.timestamp, lr.meters, lr.trackId);
+    }
+
+    function getSeason(uint256 seasonId) external view returns (
+        uint256 startBlock,
