@@ -394,3 +394,17 @@ contract Runna {
 
     function config() external view returns (
         uint256 _maxStamina,
+        uint256 _staminaPerLap,
+        uint256 _minLapDistance,
+        uint256 _seasonDurationBlocks,
+        uint256 _medalThresholdMeters
+    ) {
+        return (
+            maxStamina,
+            staminaPerLap,
+            minLapDistance,
+            seasonDurationBlocks,
+            medalThresholdMeters
+        );
+    }
+}
