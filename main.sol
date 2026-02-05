@@ -350,3 +350,25 @@ contract Runna {
 
     function metersToNextMedal(address runner) external view returns (uint256) {
         Runner storage r = runners[runner];
+        if (!r.registered) return medalThresholdMeters;
+        uint256 nextThreshold = ((r.totalMeters / medalThresholdMeters) + 1) * medalThresholdMeters;
+        return nextThreshold - r.totalMeters;
+    }
+
+    function staminaBlocksRemaining(address runner) external view returns (uint256) {
+        Runner storage r = runners[runner];
+        if (!r.registered || r.stamina >= maxStamina) return 0;
+        uint256 blocksPerStamina = 120;
+        uint256 needed = maxStamina - r.stamina;
+        return needed * blocksPerStamina;
+    }
+
+    function isTrackValid(uint256 trackId) external view returns (bool) {
+        return trackId < trackCount && tracks[trackId].exists;
+    }
+
+    function seasonIsActive(uint256 seasonId) external view returns (bool) {
+        Season storage s = seasons[seasonId];
+        return !s.finalized && block.number >= s.startBlock && block.number < s.endBlock;
+    }
+
